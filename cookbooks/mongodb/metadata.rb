@@ -1,0 +1,8 @@
+name 'mongodb'
+maintainer 'Irfan Hassan'
+maintainer_email 'irfan.hassan@hotmail.co.uk'
+description 'Installs/Configures MongoDB'
+long_description 'Installs/Configures MongoDB'
+version '0.1.1'
+chef_version '>= 14.0'
+depends 'windows'
