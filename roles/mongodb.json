@@ -1,0 +1,26 @@
+{
+    "name": "mongodb",
+    "description": "Role for Standalone MongoDB Instance",
+    "json_class": "Chef::Role",
+    "default_attributes": {
+        "mongodb": {
+            "installer": {
+                "drive": "E"
+            },
+            "data": {
+                "drive": "G"
+            },
+            "log": {
+                "drive": "H"
+            }
+        }
+    },
+    "override_attributes": {
+    },
+    "chef_type": "role",
+    "run_list": [
+      "recipe[mongodb::default]"
+    ],
+    "env_run_lists": {
+    }
+  }

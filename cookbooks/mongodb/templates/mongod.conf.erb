@@ -5,7 +5,7 @@
 
 # Where and how to store data.
 storage:
-  dbPath: G:\MongoDB\Server\4.4\data
+  dbPath: <%= node['mongodb']['data']['dir'] %>
   journal:
     enabled: true
   directoryPerDB: true
@@ -18,12 +18,12 @@ systemLog:
   destination: file
   logAppend: true
   logRotate: rename
-  path:  H:\MongoDB\Server\4.4\log\mongod.log
+  path: <%= node['mongodb']['log']['logfile'] %>
 
 # network interfaces
 net:
-  port: 27017
-  bindIp: 127.0.0.1
+  port: <%= node['mongodb']['config']['port'] %>
+  bindIp: <%= node['mongodb']['config']['ip'] %>
 
 
 #processManagement:
@@ -34,7 +34,7 @@ net:
 
 #replication:
 replication:
-  replSetName: "rs0"
+  replSetName: <%= node['mongodb']['config']['replicasetname'] %>
 
 #sharding:
 

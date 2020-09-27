@@ -4,33 +4,33 @@
 #
 
 # Create Mongo Bin folder
-directory "E:\\Program Files\\MongoDB\\Server\\4.4" do
+directory node['mongodb']['home'] do
     action :create
     recursive true
 end
   
 # Create Data folder
-directory "G:\\MongoDB\\Server\\4.4\\data" do
+directory node['mongodb']['data']['dir'] do
     action :create
     recursive true
 end
   
 # Create Log folder
-directory "H:\\MongoDB\\Server\\4.4\\log" do
+directory node['mongodb']['log']['dir'] do
     action :create
     recursive true
 end
     
 # Extract the binary
-windows_zipfile "E:\\Program Files\\MongoDB\\Server\\4.4" do
-    source "E:\\mongodb.zip" ## Zip contains the MongoDB Bin folder along with license + readme from official site.
+windows_zipfile node['mongodb']['home'] do
+    source node['mongodb']['installer']['zip']['path']
     action :unzip
-    not_if { ::File.exist?("E:\\Program Files\\MongoDB\\Server\\4.4\\bin") }
+    not_if { ::File.exist?(node['mongodb']['bin']['dir']) }
 end
   
 # Set Mongo directory into Env
 windows_env 'MONGO_HOME' do
-    value "E:\\Program Files\\MongoDB\\Server\\4.4"
+    value "#{node['mongodb']['home']}"
     action :create
 end
   
@@ -40,14 +40,14 @@ windows_path "%MONGO_HOME%\\bin" do
 end
   
 # Configure Mongod.conf
-template "E:\\Program Files\\MongoDB\\Server\\4.4\\bin\\mongod.conf" do
+template "#{node['mongodb']['bin']['dir']}\\mongod.conf" do
     source 'mongod.conf.erb'
 end
   
 # Setup MongoDB Windows Service
 powershell_script 'MongoDBService' do
     guard_interpreter :powershell_script
-    code "mongod --config \"E:\\Program Files\\MongoDB\\Server\\4.4\\bin\\mongod.conf\" --install"
+    code "mongod --config \"#{node['mongodb']['bin']['configfile']}\" --install"
 end
   
 # Start MongoDB service
@@ -56,8 +56,8 @@ windows_service 'MongoDB' do
 end
   
 # Initialise the MongoDB RS
-   powershell_script 'MongoDbReplSet' do
+powershell_script 'MongoDbReplSet' do
     guard_interpreter :powershell_script
-    code "mongo mongodb://127.0.0.1:27017 --eval \"rs.initiate()\""
+    code "mongo mongodb://#{node['mongodb']['config']['ip']}:#{node['mongodb']['config']['port']} --eval \"rs.initiate()\""
 end
   
