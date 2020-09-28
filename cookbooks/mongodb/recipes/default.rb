@@ -40,14 +40,16 @@ windows_path "%MONGO_HOME%\\bin" do
 end
   
 # Configure Mongod.conf
-template "#{node['mongodb']['bin']['dir']}\\mongod.conf" do
-    source 'mongod.conf.erb'
+template "#{node['mongodb']['bin']['configfile']}" do
+  source 'mongod.conf.erb'
+  not_if { ::Win32::Service.exists?(node['mongodb']['config']['servicename']) }
 end
   
 # Setup MongoDB Windows Service
 powershell_script 'MongoDBService' do
     guard_interpreter :powershell_script
     code "mongod --config \"#{node['mongodb']['bin']['configfile']}\" --install"
+    not_if { ::Win32::Service.exists?(node['mongodb']['config']['servicename']) }
 end
   
 # Start MongoDB service

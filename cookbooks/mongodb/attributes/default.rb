@@ -22,3 +22,4 @@ default['mongodb']['log']['logfile'] = "#{node['mongodb']['log']['dir']}\\mongod
 default['mongodb']['config']['ip'] = '127.0.0.1'
 default['mongodb']['config']['port'] = '27017'
 default['mongodb']['config']['replicasetname'] = 'rs0'
+default['mongodb']['config']['servicename'] = 'mongodb'
